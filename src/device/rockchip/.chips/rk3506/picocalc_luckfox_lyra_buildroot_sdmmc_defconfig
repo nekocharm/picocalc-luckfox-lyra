@@ -1,0 +1,21 @@
+RK_ROOTFS=y
+RK_BUILDROOT_BASE_CFG="rk3506_picocalc_luckfox"
+# RK_YOCTO is not set
+RK_ROOTFS_HOSTNAME_CUSTOM=y
+RK_ROOTFS_HOSTNAME="luckfox"
+RK_ROOTFS_INSTALL_MODULES=y
+# RK_WIFIBT is not set
+# RK_ROOTFS_LOG_GUARDIAN is not set
+RK_EXTRA_FONTS_ENABLED_EN=y
+RK_UBOOT_CFG="picocalc_rk3506_luckfox"
+RK_AMP=y
+RK_AMP_RTT_TARGET=""
+RK_AMP_MCU_RTT_TARGET=""
+RK_AMP_FIT_ITS="amp_mcu.its"
+RK_KERNEL_CFG="picocalc_rk3506_luckfox_defconfig"
+RK_KERNEL_CFG_FRAGMENTS="picocalc-rk3506-display.config"
+RK_KERNEL_DTS_NAME="picocalc-rk3506g-luckfox-lyra"
+RK_BOOT_COMPRESSED=y
+RK_EXTRA_PARTITION_NUM=0
+RK_PARAMETER="parameter-lyra-sdmmc-amp.txt"
+RK_USE_FIT_IMG=y

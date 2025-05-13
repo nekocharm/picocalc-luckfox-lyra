@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#PWM drivers
+
+menuconfig SND_PWM
+	bool "PWM sound devices"
+	help
+	  Support for sound devices connected via the PWM.
+
+if SND_PWM
+
+config SOFTPWM_SOUND
+	bool "RK3506 MCU Soft PWM Sound driver"
+	select SND_PCM
+	help
+	  Support for sound devices connected via the MCU Soft PWM.
+
+endif	# SND_PWM
