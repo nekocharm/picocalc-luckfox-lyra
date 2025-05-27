@@ -45,4 +45,9 @@ else
 fi
 
 create_symlink $SRC_PATH $SDK_PATH
-ln -sfr $SRC_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay $SDK_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay
+
+if [ -d "$SDK_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay" ]
+then
+    rm -rf $SDK_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay
+fi
+ln -sr $SRC_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay $SDK_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay
