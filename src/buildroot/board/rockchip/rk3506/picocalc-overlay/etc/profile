@@ -27,3 +27,6 @@ done
 unset i
 
 readonly PROMPT_COMMAND="history -a"
+
+alias ll='ls -l'
+alias la='ls -a'

@@ -1,0 +1,12 @@
+diff --git a/deps/libz/gzguts.h b/deps/libz/gzguts.h
+index 78b2ef2..f482e57 100644
+--- a/deps/libz/gzguts.h
++++ b/deps/libz/gzguts.h
+@@ -12,6 +12,7 @@
+ #  endif
+ #  ifdef _FILE_OFFSET_BITS
+ #    undef _FILE_OFFSET_BITS
++#    undef _TIME_BITS
+ #  endif
+ #endif
+ 

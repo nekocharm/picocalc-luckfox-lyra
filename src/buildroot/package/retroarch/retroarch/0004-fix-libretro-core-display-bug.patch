@@ -1,0 +1,16 @@
+if is_focused == false, runloop_paused will be true.
+
+---
+diff --git a/runloop.c b/runloop.c
+index ce403a6..4c46468 100644
+--- a/runloop.c
++++ b/runloop.c
+@@ -5572,7 +5572,7 @@ static enum runloop_state_enum runloop_check_state(
+    is_alive    = video_st->current_video
+       ? video_st->current_video->alive(video_st->data)
+       : true;
+-   is_focused  = VIDEO_HAS_FOCUS(video_st);
++   is_focused  = true;
+ 
+ #ifdef HAVE_MENU
+    if (menu_driver_binding_state)

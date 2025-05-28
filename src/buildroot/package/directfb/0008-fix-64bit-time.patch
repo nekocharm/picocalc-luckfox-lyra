@@ -1,0 +1,108 @@
+diff --git a/inputdrivers/linux_input/linux_input.c b/inputdrivers/linux_input/linux_input.c
+index 7e9a6ad..911a9a6 100644
+--- a/inputdrivers/linux_input/linux_input.c
++++ b/inputdrivers/linux_input/linux_input.c
+@@ -754,7 +754,8 @@ translate_event( const LinuxInputData     *data,
+                  DFBInputEvent            *devt )
+ {
+      devt->flags     = DIEF_TIMESTAMP;
+-     devt->timestamp = levt->time;
++     devt->timestamp.tv_sec = levt->input_event_sec;
++     devt->timestamp.tv_usec = levt->input_event_usec;
+ 
+      switch (levt->type) {
+           case EV_KEY:
+@@ -2139,7 +2140,8 @@ touchpad_translate( struct touchpad_fsm_state *state,
+      int abs, rel;
+ 
+      devt->flags     = DIEF_TIMESTAMP | (dfb_config->linux_input_touch_abs ? DIEF_AXISABS : DIEF_AXISREL);
+-     devt->timestamp = levt->time;
++     devt->timestamp.tv_sec = levt->input_event_sec;
++     devt->timestamp.tv_usec = levt->input_event_usec;
+      devt->type      = DIET_AXISMOTION;
+ 
+      switch (levt->code) {
+@@ -2204,6 +2206,7 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+               DFBInputEvent             *devt )
+ {
+      struct timeval timeout = { 0, 125000 };
++     struct timeval time;
+ 
+      /* select() timeout? */
+      if (!levt) {
+@@ -2232,8 +2235,10 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+          (levt->type == EV_KEY && levt->code == BTN_TOOL_TRIPLETAP)) {
+ 
+           /* Check if button release is due. */
++          time.tv_sec = levt->input_event_sec;
++          time.tv_usec = levt->input_event_usec;
+           if (state->fsm_state == TOUCHPAD_FSM_DRAG_START &&
+-              timeout_passed( &state->timeout, &levt->time )) {
++              timeout_passed( &state->timeout, &time )) {
+                devt->flags     = DIEF_TIMESTAMP;
+                devt->timestamp = state->timeout; /* timeout of levt->time? */
+                devt->type      = DIET_BUTTONRELEASE;
+@@ -2255,7 +2260,8 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+      case TOUCHPAD_FSM_START:
+           if (touchpad_finger_landing( levt )) {
+                state->fsm_state = TOUCHPAD_FSM_MAIN;
+-               state->timeout = levt->time;
++               state->timeout.tv_sec = levt->input_event_sec;
++               state->timeout.tv_usec = levt->input_event_usec;
+                timeout_add( &state->timeout, &timeout );
+           }
+           return 0;
+@@ -2268,15 +2274,19 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+                }
+           }
+           else if (touchpad_finger_leaving( levt )) {
+-               if (!timeout_passed( &state->timeout, &levt->time )) {
++               time.tv_sec = levt->input_event_sec;
++               time.tv_usec = levt->input_event_usec;
++               if (!timeout_passed( &state->timeout, &time )) {
+                     devt->flags     = DIEF_TIMESTAMP;
+-                    devt->timestamp = levt->time;
++                    devt->timestamp.tv_sec = levt->input_event_sec;
++                    devt->timestamp.tv_usec = levt->input_event_usec;
+                     devt->type      = DIET_BUTTONPRESS;
+                     devt->button    = DIBI_FIRST;
+ 
+                     touchpad_fsm_init( state );
+                     state->fsm_state = TOUCHPAD_FSM_DRAG_START;
+-                    state->timeout = levt->time;
++                    state->timeout.tv_sec = levt->input_event_sec;
++                    state->timeout.tv_usec = levt->input_event_usec;
+                     timeout_add( &state->timeout, &timeout );
+                     return 1;
+                }
+@@ -2287,7 +2297,9 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+           return 0;
+ 
+      case TOUCHPAD_FSM_DRAG_START:
+-          if (timeout_passed( &state->timeout, &levt->time )){
++          time.tv_sec = levt->input_event_sec;
++          time.tv_usec = levt->input_event_usec;
++          if (timeout_passed( &state->timeout, &time )){
+                devt->flags     = DIEF_TIMESTAMP;
+                devt->timestamp = state->timeout; /* timeout of levt->time? */
+                devt->type      = DIET_BUTTONRELEASE;
+@@ -2299,7 +2311,8 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+           else {
+                if (touchpad_finger_landing( levt )) {
+                     state->fsm_state = TOUCHPAD_FSM_DRAG_MAIN;
+-                    state->timeout = levt->time;
++                    state->timeout.tv_sec = levt->input_event_sec;
++                    state->timeout.tv_usec = levt->input_event_usec;
+                     timeout_add( &state->timeout, &timeout );
+                }
+           }
+@@ -2314,7 +2327,8 @@ touchpad_fsm( struct touchpad_fsm_state *state,
+           }
+           else if (touchpad_finger_leaving( levt )) {
+                devt->flags     = DIEF_TIMESTAMP;
+-               devt->timestamp = levt->time;
++               devt->timestamp.tv_sec = levt->input_event_sec;
++               devt->timestamp.tv_usec = levt->input_event_usec;
+                devt->type      = DIET_BUTTONRELEASE;
+                devt->button    = DIBI_FIRST;
+ 

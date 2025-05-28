@@ -43,8 +43,8 @@ static uint32_t left_timer_irq = TIMER4_IRQn;
 static bool left_enable = false;
 static bool left_flag = true;
 
-static struct TIMER_REG *right_timer = TIMER3;
-static uint32_t right_timer_irq = TIMER3_IRQn;
+static struct TIMER_REG *right_timer = TIMER0;
+static uint32_t right_timer_irq = TIMER0_IRQn;
 static bool right_enable = false;
 static bool right_flag = true;
 #else
