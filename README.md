@@ -2,6 +2,8 @@
 
 Based on Luckfox_Lyra_SDK_250429
 
+Image and SDK [Download](https://mega.nz/folder/hn8iUDzY#Db-FwlFiGOg4CetCUm3r9Q)
+
 ## 1. Prepare SDK
 
 ### 1.1. SDK Environment Deployment
