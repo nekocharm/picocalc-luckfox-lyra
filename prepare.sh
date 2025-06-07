@@ -12,6 +12,10 @@ function create_symlink(){
         else
             local path_src=$1"/"$file  
             local path_sdk=$2"/"$file
+            if [ ! -d "$2" ]
+            then
+                mkdir -p $2
+            fi
             ln -sfr $path_src $path_sdk
         fi
     done
