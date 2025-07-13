@@ -29,7 +29,7 @@
 #define DEFAULT_PWM_PERIOD (375)
 
 struct softpwm_config {
-	u32 left_duty; // 1~374, 0 and 375 for stop
+	u32 left_duty; // 0~374, 0 and 375 for stop, use 0 to implement mute
 	u32 right_duty;
 };
 
@@ -65,17 +65,17 @@ enum hrtimer_restart softpwm_hrtimer_callback(struct hrtimer *t)
 		softpwm_snd->data_ptr = 0;
 
 	// The audio bit width is 8 bit (0~255)
-	// The range of left_duty and right_duty is 1~374
-	// We need map 0~255 to 1~374
+	// The range of left_duty and right_duty is 0~374
+	// We need map 0~255 to 0~374
 	// TODO: Stereo channel can't work
 	switch (softpwm_snd->channels) {
 	case 1: //Mono
-		softpwm_snd->softpwm->left_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
-		softpwm_snd->softpwm->right_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
+		softpwm_snd->softpwm->left_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
+		softpwm_snd->softpwm->right_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
 		break;
 	case 2: //Stereo
-		softpwm_snd->softpwm->left_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
-		softpwm_snd->softpwm->right_duty = (u32)data[softpwm_snd->data_ptr++] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
+		softpwm_snd->softpwm->left_duty = (u32)data[softpwm_snd->data_ptr] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
+		softpwm_snd->softpwm->right_duty = (u32)data[softpwm_snd->data_ptr++] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
 		break;
 	}
 
@@ -173,13 +173,13 @@ static int softpwm_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 
 		switch (softpwm_snd->channels) {
 		case 1: //Mono
-			softpwm_snd->softpwm->left_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
-			softpwm_snd->softpwm->right_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
+			softpwm_snd->softpwm->left_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
+			softpwm_snd->softpwm->right_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
 			softpwm_snd->data_ptr = 0;
 			break;
 		case 2: //Stereo
-			softpwm_snd->softpwm->left_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
-			softpwm_snd->softpwm->right_duty = (u32)data[1] * (u32)(DEFAULT_PWM_PERIOD - 2) / 255 + 1;
+			softpwm_snd->softpwm->left_duty = (u32)data[0] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
+			softpwm_snd->softpwm->right_duty = (u32)data[1] * (u32)(DEFAULT_PWM_PERIOD - 1) / 255;
 			softpwm_snd->data_ptr = 1;
 			break;
 		}
