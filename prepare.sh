@@ -57,3 +57,9 @@ fi
 ln -sr $SRC_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay $SDK_PATH/buildroot/board/rockchip/rk3506/picocalc-overlay
 
 create_symlink $SRC_PATH/device/rockchip/.chips $SDK_PATH/device/rockchip/.chips
+
+if [ -d "$SDK_PATH/device/rockchip/common/extra-parts/userdata/picocalc" ]
+then
+    rm -rf $SDK_PATH/device/rockchip/common/extra-parts/userdata/picocalc
+fi
+mkdir $SDK_PATH/device/rockchip/common/extra-parts/userdata/picocalc

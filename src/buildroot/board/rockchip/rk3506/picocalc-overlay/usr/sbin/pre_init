@@ -1,0 +1,32 @@
+#!/bin/sh
+
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+
+mount -o remount,rw /
+
+mkdir -p /overlay
+mount /dev/mmcblk0p5 /overlay
+
+mkdir -p /overlay/lower /overlay/upper /overlay/work /overlay/merged
+mount --bind / /overlay/lower
+
+mount -t overlay overlay -o noatime,lowerdir=/overlay/lower,upperdir=/overlay/upper,workdir=/overlay/work /overlay/merged
+
+mkdir -p /overlay/merged/rom
+
+pivot_root /overlay/merged /overlay/merged/rom
+
+mount --move /rom/proc /proc
+mount --move /rom/sys /sys
+mount --move /rom/dev /dev
+
+mount --move /rom/overlay /overlay
+
+mount -o remount,ro /rom
+mount -o remount,ro /overlay/lower
+
+umount -l /rom/dev
+
+exec /sbin/init
