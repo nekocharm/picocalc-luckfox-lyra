@@ -145,6 +145,7 @@ static void timer_isr(long unsigned int irq, void *args)
             enable = false;
             HAL_GPIO_SetPinLevel(GPIO4, GPIO_PIN_B2, GPIO_LOW);
             HAL_GPIO_SetPinLevel(GPIO4, GPIO_PIN_B3, GPIO_LOW);
+            HAL_DBG("Sound Stop\n");
         }
     } else {
         HAL_GPIO_SetPinLevel(GPIO4, GPIO_PIN_B2, GPIO_LOW);
@@ -228,6 +229,7 @@ int main(void)
         {
             HAL_TIMER_SetCount(timer, softpwm->left_duty);
             HAL_TIMER_Start_IT(timer);
+            HAL_DBG("Sound Start\n");
             enable = true;
         }
 #endif
