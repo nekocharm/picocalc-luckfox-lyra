@@ -1,0 +1,58 @@
+From 1b4192a7dfe1c54eee8c6b974f9b6f9dc828e63b Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sun, 7 Sep 2025 12:48:38 +0800
+Subject: [PATCH] ratio
+
+---
+ menu/drivers/rgui.c | 5 +++++
+ menu/menu_defines.h | 1 +
+ menu/menu_setting.c | 5 +++++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/menu/drivers/rgui.c b/menu/drivers/rgui.c
+index c0cca98..0bafae4 100644
+--- a/menu/drivers/rgui.c
++++ b/menu/drivers/rgui.c
+@@ -6224,6 +6224,11 @@ static bool rgui_set_aspect_ratio(
+                      rgui->frame_buf.height * video_st->av_info.geometry.aspect_ratio);
+          }
+          break;
++      case RGUI_ASPECT_RATIO_PICOCALC:
++         rgui->frame_buf.height = 320;
++         rgui->frame_buf.width = 320;
++         base_term_width = rgui->frame_buf.width;
++         break;
+       default:
+          /* 4:3 */
+          if (rgui->frame_buf.height == 240)
+diff --git a/menu/menu_defines.h b/menu/menu_defines.h
+index e595b32..a70b8dd 100644
+--- a/menu/menu_defines.h
++++ b/menu/menu_defines.h
+@@ -396,6 +396,7 @@ enum rgui_aspect_ratio
+    RGUI_ASPECT_RATIO_5_3,
+    RGUI_ASPECT_RATIO_5_3_CENTRE,
+    RGUI_ASPECT_RATIO_AUTO,
++   RGUI_ASPECT_RATIO_PICOCALC,
+    RGUI_ASPECT_RATIO_LAST
+ };
+ 
+diff --git a/menu/menu_setting.c b/menu/menu_setting.c
+index 88018fc..f3e6286 100644
+--- a/menu/menu_setting.c
++++ b/menu/menu_setting.c
+@@ -4058,6 +4058,11 @@ static void setting_get_string_representation_uint_rgui_aspect_ratio(
+                   MENU_ENUM_LABEL_VALUE_RGUI_ASPECT_RATIO_AUTO),
+                len);
+          break;
++      case RGUI_ASPECT_RATIO_PICOCALC:
++         strlcpy(s,
++               "Picocalc",
++               len);
++         break;
+ 
+    }
+ }
+-- 
+2.34.1
+
